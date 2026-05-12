@@ -15,22 +15,54 @@ import {
   type AppConfig,
   estimateImagesSize,
 } from './lib/storage';
-import { defaultImages } from './lib/defaults';
 import { generatePdf, downloadPdf } from './lib/pdf';
 import { ImageUploader } from './components/ImageUploader';
 import { SymbolGrid } from './components/SymbolGrid';
 import { CardSvg } from './components/CardSvg';
+import { IconPicker } from './components/IconPicker';
+import { DEFAULT_ICON_NAMES, iconToDataUrl } from './lib/defaults';
 
 export default function App() {
-  const [images, setImages] = useState<StoredImage[]>(() => {
-    const stored = loadImages();
-    return stored.length > 0 ? stored : defaultImages();
-  });
+  const [images, setImages] = useState<StoredImage[]>(() => loadImages());
   const [config, setConfig] = useState<AppConfig>(() => loadConfig());
   const [error, setError] = useState<string | null>(null);
   const [warning, setWarning] = useState<string | null>(null);
   const [generating, setGenerating] = useState(false);
   const [progress, setProgress] = useState(0);
+  const [loadingDefaults, setLoadingDefaults] = useState(false);
+
+  const fetchDefaultIcons = useCallback(async () => {
+    setLoadingDefaults(true);
+    try {
+      const results: StoredImage[] = [];
+      for (const iconName of DEFAULT_ICON_NAMES) {
+        const [prefix, name] = iconName.split(':');
+        const res = await fetch(`https://api.iconify.design/${prefix}/${name}.svg`);
+        const svg = await res.text();
+        results.push({
+          id: `default-${iconName}-${Math.random().toString(36).slice(2, 5)}`,
+          name: `${name} (default)`,
+          dataUrl: iconToDataUrl(svg),
+          mime: 'image/svg+xml',
+          width: 256,
+          height: 256,
+          addedAt: Date.now(),
+        });
+      }
+      setImages(results);
+    } catch (e) {
+      setError('No se pudieron cargar los iconos predeterminados.');
+    } finally {
+      setLoadingDefaults(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    // Si no hay imágenes y no estamos cargando, traemos los defaults
+    if (images.length === 0 && !loadingDefaults) {
+      void fetchDefaultIcons();
+    }
+  }, [images.length, loadingDefaults, fetchDefaultIcons]);
 
   useEffect(() => {
     const res = saveImages(images);
@@ -69,10 +101,10 @@ export default function App() {
     setImages((prev) => prev.filter((i) => i.id !== id));
   }, []);
   const resetDefaults = useCallback(() => {
-    if (confirm('Esto reemplaza las imágenes cargadas por las de ejemplo. ¿Seguir?')) {
-      setImages(defaultImages());
+    if (confirm('Esto reemplaza las imágenes cargadas por los iconos predeterminados. ¿Seguir?')) {
+      void fetchDefaultIcons();
     }
-  }, []);
+  }, [fetchDefaultIcons]);
   const clearAll = useCallback(() => {
     if (confirm('Esto borra todas las imágenes cargadas. ¿Seguir?')) {
       setImages([]);
@@ -126,7 +158,13 @@ export default function App() {
             {images.length} imágenes · {storageInfoKb} KB en localStorage
           </span>
         </div>
-        <ImageUploader onAdd={handleAdd} onError={setError} />
+        <div className="uploader-grid">
+          <ImageUploader onAdd={handleAdd} onError={setError} />
+          <IconPicker onAdd={handleAdd} onError={setError} />
+        </div>
+        {loadingDefaults && (
+          <div className="loading-indicator">Cargando iconos predeterminados...</div>
+        )}
         <SymbolGrid images={images} onRemove={handleRemove} />
         <div className="toolbar" style={{ marginTop: 14 }}>
           <button type="button" className="btn" onClick={resetDefaults}>

@@ -88,10 +88,10 @@ export function layoutSymbols(
   const rng = makeRng(seed);
   const rings = ringsFor(k);
 
-  // Estratificación de tamaños: divide el rango [0.78, 1.32] en k franjas iguales
+  // Estratificación de tamaños: divide el rango [0.70, 1.20] en k franjas iguales
   // y muestrea un multiplicador por franja. Garantiza que en cada carta siempre
   // haya símbolos chicos, medianos y grandes, sin importar el seed.
-  const sizeMin = 0.78, sizeMax = 1.32;
+  const sizeMin = 0.70, sizeMax = 1.20;
   const sizeSlot = (sizeMax - sizeMin) / k;
   const sizeMults = Array.from({ length: k }, (_, idx) =>
     sizeMin + sizeSlot * idx + rng() * sizeSlot,
