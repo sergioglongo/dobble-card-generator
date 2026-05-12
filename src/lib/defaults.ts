@@ -7,8 +7,8 @@ export const DEFAULT_ICON_NAMES = [
   'noto:whale', 'noto:monkey', 'noto:cow', 'noto:rabbit', 'noto:coin',
   'noto:pencil', 'noto:magnifying-glass-tilted-left', 'noto:sunglasses', 'noto:cat', 'noto:bus',
   'noto:airplane', 'noto:ship', 'noto:cloud-with-rain', 'noto:ringed-planet', 'noto:soccer-ball',
-  'noto:birthday-cake', 'noto:mans-shoe', 'noto:television', 'noto:helicopter', 'noto:flag-argentina',
-  'noto:pizza', 'noto:ear-of-corn', 'noto:globe-showing-americas', 'noto:lion', 'noto:umbrella',
+  'noto:birthday-cake', 'noto:mans-shoe', 'noto:television', 'noto:helicopter', 'noto:horse',
+  'noto:pizza', 'noto:ear-of-corn', 'noto:penguin', 'noto:lion', 'noto:umbrella',
   'noto:pig', 'noto:desktop-computer', 'noto:computer-mouse', 'noto:evergreen-tree', 'noto:palm-tree',
   'noto:baby'
 ];
