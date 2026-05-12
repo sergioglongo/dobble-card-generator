@@ -1,0 +1,12 @@
+node_modules
+dist
+dist-ssr
+.vite
+.DS_Store
+*.local
+*.log
+.env
+.env.*
+.claude/
+.gemini/
+test.txt
