@@ -61,7 +61,7 @@ export function IconPicker({ onAdd, onError }: Props) {
 
       // Forzar que el SVG use el 100% del contenedor para que no se vea pequeño
       // Eliminamos width/height previos e inyectamos los nuevos
-      svgText = svgText.replace(/<svg([^>]*)>/, (match, body) => {
+      svgText = svgText.replace(/<svg([^>]*)>/, (_, body) => {
         const cleanBody = body.replace(/\b(width|height)=["'][^"']*["']/g, '').trim();
         return `<svg ${cleanBody} width="100%" height="100%">`;
       });

@@ -19,7 +19,7 @@ export const DEFAULT_ICON_NAMES = [
  */
 export function iconToDataUrl(svgText: string): string {
   // Limpieza para asegurar que llene el contenedor (100%)
-  const cleaned = svgText.replace(/<svg([^>]*)>/, (match, body) => {
+  const cleaned = svgText.replace(/<svg([^>]*)>/, (_, body) => {
     const cleanBody = body.replace(/\b(width|height)=["'][^"']*["']/g, '').trim();
     return `<svg ${cleanBody} width="100%" height="100%">`;
   });
